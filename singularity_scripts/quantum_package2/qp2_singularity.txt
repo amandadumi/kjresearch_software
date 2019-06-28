@@ -1,0 +1,42 @@
+Bootstrap: docker
+From: archlinux/base:latest
+
+%labels
+    Author shiv <shivnupadhyay@gmail.com>
+    Author amanda <amanda.e.dumi@gmail.com>
+
+%post
+    HOME=/root
+    cd $HOME
+
+    yes | pacman -Syu
+    yes | pacman -Syu git
+    yes | pacman -Syu wget
+    yes | pacman -Syu vim
+    yes | pacman -Syu awk
+    yes | pacman -Syu sed
+    yes | pacman -Syu procps-ng
+    yes | pacman -Syu make
+    yes | pacman -Syu diffutils
+    yes | pacman -Syu rsync
+    yes | pacman -Syu unzip
+    yes | pacman -Syu tar
+    yes | pacman -Syu m4
+    yes | pacman -Syu gcc
+    yes | pacman -Syu gcc-fortran
+    yes | pacman -Syu patch
+    yes | pacman -Syu python2
+    ln -sf /usr/bin/python2 /usr/bin/python
+    yes | pacman -Syu pkgconf
+    yes | pacman -Syu openblas
+    yes | pacman -Syu lapack
+    yes | pacman -Syu which
+    echo 'export QP_ROOT=/opt/quantum_package' >> $SINGULARITY_ENVIRONMENT
+    cd /opt
+    git clone https://github.com/QuantumPackage/qp2.git quantum_package
+    cd quantum_package
+
+%environment
+    export HOME=/root
+    export QP_ROOT=/opt/quantum_package
+    export PATH=${QP_PYTHON}:${QP_ROOT}/bin:$PATH

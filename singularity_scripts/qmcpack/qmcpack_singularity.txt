@@ -1,0 +1,62 @@
+Bootstrap: docker
+From: archlinux/base:latest
+
+%labels
+    Author amanda <amanda.e.dumi@gmail.com>
+    Author shiv <shivnupadhyay@gmail.com>
+
+%post
+    HOME=/root
+    cd $HOME
+
+    yes | pacman -Syu
+    yes | pacman -Syu git
+    yes | pacman -Syu wget
+    yes | pacman -Syu vim
+    yes | pacman -Syu awk
+    yes | pacman -Syu sed
+    yes | pacman -Syu procps-ng
+    yes | pacman -Syu make
+    yes | pacman -Syu cmake
+    yes | pacman -Syu vim
+    ln -s /usr/bin/vim /usr/bin/vi
+    yes | pacman -Syu python2
+    ln -sf /usr/bin/python2 /usr/bin/python
+    yes | pacman -Syu diffutils
+    yes | pacman -Syu rsync
+    yes | pacman -Syu unzip
+    yes | pacman -Syu tar
+    yes | pacman -Syu m4
+    yes | pacman -Syu gcc
+    yes | pacman -Syu gcc-fortran
+    yes | pacman -Syu patch
+    yes | pacman -Syu pkgconf
+    yes | pacman -Syu openblas
+    yes | pacman -Syu lapack
+    yes | pacman -Syu boost
+    yes | pacman -Syu fftw
+    yes | pacman -Syu hdf5
+    yes | pacman -Syu which
+    yes | pacman -Syu python2-pip
+    pip2.7 install pyscf
+    # open mpi
+    yes | pacman -Syu autoconf ## needed for git openmpi
+    yes | pacman -Syu automake ## needed for git openmpi
+    yes | pacman -Syu flex ## needed for git openmpi
+    git clone https://github.com/open-mpi/ompi.git
+    cd ompi
+    ./autogen.pl
+    ./configure --prefix=/usr/local
+    make
+    make install
+    #
+    cd /opt
+    git clone https://github.com/QMCPACK/qmcpack.git qmcpack
+    cd qmcpack
+    cd build
+    cmake -DCMAKE_C_COMPILER=$(which mpicc) -DCMAKE_CXX_COMPILER=$(which mpicxx) ..
+    make 
+%environment
+    export HOME=/root
+    export PATH=/opt/qmcpack/nexus/lib/:$PATH
+    export PYTHONPATH=/opt/qmcpack/nexus/lib/:$PATH
