@@ -9,11 +9,7 @@
 
      Interacting is like sshing into the image. Now you can build QP2 according to the instructions found [here](https://quantum-package.readthedocs.io/en/master/intro/install.html). What is left out of the instillation instructions is that once all dependencies are installed as described, just type `make` in the `quantum_package` directory. QP2 is located in `/opt`.
 
-4. Once built you will need to copy the 90-environment.sh file in this directory to
 
-    `/opt/quantum_package.img/.singularity.d/env/90-environment.sh`
-
-    This command makes the sandbox image which is a folder into a file that you can use on the cluster.
 5. Build an image to run on the cluster using
 
    `sudo singularity build quantum\_package.simg quantum\_package.img`
