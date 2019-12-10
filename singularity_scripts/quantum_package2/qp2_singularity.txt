@@ -8,11 +8,11 @@ From: archlinux/base:latest
 %post
     HOME=/root
     cd $HOME
-
+    mount -o remount,rw /etc/resolv.conf
+    mount -o remount,rw /etc/hosts
     yes | pacman -Syu
     yes | pacman -Syu git
     yes | pacman -Syu wget
-    yes | pacman -Syu vim
     yes | pacman -Syu awk
     yes | pacman -Syu sed
     yes | pacman -Syu procps-ng
@@ -53,6 +53,7 @@ From: archlinux/base:latest
     qp_plugins download https://github.com/QuantumPackage/QMCPACK_ff
     mv plugins/QMCPACK_ff plugins/QMCPack
     qp_plugins install QMCPack
+    sed -i s/"  read_wf = .False."/"  \!read_wf = .False."/g    src/determinants/determinants.irp.f
     ninja
 
 %environment
