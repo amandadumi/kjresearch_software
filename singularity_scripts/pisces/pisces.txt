@@ -1,0 +1,66 @@
+Bootstrap: docker
+From: archlinux/base:latest
+
+%labels
+    Author shiv <shivnupadhyay@gmail.com>
+    Author amanda <amanda.e.dumi@gmail.com>
+
+%post
+    HOME=/root
+    cd $HOME
+    mount -o remount,rw /etc/resolv.conf
+    mount -o remount,rw /etc/hosts
+    yes | pacman -Syu
+    yes | pacman -Syu git
+    yes | pacman -Syu wget
+    yes | pacman -Syu awk
+    yes | pacman -Syu sed
+    yes | pacman -Syu make
+    yes | pacman -Syu diffutils
+    yes | pacman -Syu unzip
+    yes | pacman -Syu tar
+    yes | pacman -Syu m4
+    yes | pacman -Syu gcc
+    yes | pacman -Syu gcc-fortran
+    yes | pacman -Syu patch
+    yes | pacman -Syu vim
+    ln -sf /usr/bin/vim /usr/bin/vi
+    yes | pacman -Syu openblas
+    yes | pacman -Syu lapack
+    yes | pacman -Syu which
+    yes | pacman -Syu cmake
+    yes | pacman -Syu openmpi
+    yes | pacman -Syu arpack
+    yes | pacman -Syu openmp
+    yes | pacman -Syu doxygen
+    yes | pacman -Syu graphviz
+
+    export HOME=/root
+    cd /opt
+
+    ## FFTW
+    wget http://www.fftw.org/fftw-3.3.8.tar.gz
+    tar -xvf fftw-3.3.8.tar.gz
+    mv fftw-3.3.8 fftw
+    cd fftw
+    CFLAGS=" -O3 -fPIC -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math" \
+    ./configure F77=gfortran --prefix=/usr --enable-shared --enable-threads --enable-mpi --enable-openmp
+    make
+    make install
+
+    ## PISCES
+    cd /opt
+    git clone https://username:password@github.com/amandadumi/PISCES.git
+    cd PISCES
+    mkdir build
+    cd build
+    CC=mpicc \
+    CXX=mpic++ \
+    FC=mpifort \
+    CFLAGS="-Wall -Wextra" \
+    CXXFLAGS="-Wall -Wextra" \
+    FFLAGS="-Wall -Wextra" \
+    cmake .. -DHAVE_ARPACK=1 -DHAVE_FFTW=1
+    make
+%environment
+    export HOME=/root
